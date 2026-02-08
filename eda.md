@@ -118,3 +118,22 @@ weather_df %>%
     ##  9 2021-09-01    90     30
     ## 10 2021-10-01    93     31
     ## # ℹ 14 more rows
+
+## A digression on 2x2 tables
+
+``` r
+weather_df %>% 
+  filter(name != "Molokai_HI") %>%
+  mutate(
+    cold = case_when(
+      tmax <  5 ~ "cold",
+      tmax >= 5 ~ "not cold",
+      TRUE      ~ ""
+    )
+  ) %>% 
+  janitor::tabyl(name, cold)
+```
+
+    ##            name cold not cold emptystring_
+    ##  CentralPark_NY   96      634            0
+    ##    Waterhole_WA  319      395           16
