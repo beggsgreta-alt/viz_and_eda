@@ -1,12 +1,12 @@
 ---
 title: "Visualization"
-subtitle: "Part 1"
+subtitle: "Part 2"
 output: github_document
 ---
 
 ```{r setup}
 library(tidyverse)
-library(ggridges)
+library(patchwork)
 ```
 
 ## Load the weather data
@@ -17,172 +17,26 @@ data("weather_df")
 ```
 
 
-## Scatterplots!!
-
-Create my first scatterplot ever.
-
-```{r}
-ggplot(weather_df, aes(x = tmin, y = tmax)) + 
-  geom_point()
-```
-
-New approach, same plot
+## Remember this plot ..?
 
 ```{r}
 weather_df %>% 
-  ggplot(aes(x = tmin, y = tmax)) + 
-  geom_point()
-```
-
-Save and edit a plot object.
-
-```{r}
-weather_plot = 
-  weather_df %>% 
-  ggplot(aes(x = tmin, y = tmax))
-
-weather_plot + geom_point()
-```
-
-## Advanced scatterplot ...
-
-Start with the same one and make it fancy
-
-```{r}
-weather_df %>% 
-  ggplot(aes(x = tmin, y = tmax, color = name)) + 
-  geom_point() + 
-  geom_smooth(se = FALSE)
-```
-
-What about the `aes` placement ..?
-
-```{r}
-weather_df %>% 
-  ggplot(aes(x = tmin, y = tmax)) + 
-  geom_point(aes(color = name)) + 
-  geom_smooth()
-```
-
-Lets facet some things!!
-
-```{r}
-weather_df %>% 
-  ggplot(aes(x = tmin, y = tmax, color = name)) + 
-  geom_point(alpha = .2) + 
-  geom_smooth(se = FALSE) + 
-  facet_grid(. ~ name)
-```
-
-Let's combine some elements and try a new plot.
-
-```{r}
-weather_df %>% 
-  ggplot(aes(x = date, y = tmax, color = name)) + 
-  geom_point(aes(size = prcp), alpha = .5) + 
-  geom_smooth(se = FALSE) + 
-  facet_grid(. ~ name)
-```
-
-
-
-## Some small notes
-
-How many geoms have to exist?
-
-You can have whatever geoms you want.
-
-```{r}
-weather_df %>% 
-  ggplot(aes(x = tmin, y = tmax, color = name)) + 
-  geom_smooth(se = FALSE)
-```
-
-You can use a neat geom!
-
-```{r}
-weather_df %>%
-  ggplot(aes(x = tmin, y = tmax)) + 
-  geom_density2d() + 
-  geom_point(alpha = .3)
-```
-
-
-## Univariate plots 
-
-Histograms are really great.
-
-```{r}
-weather_df %>% 
-  ggplot(aes(x = tmin)) +
-  geom_histogram()
-```
-
-Can we add color ..
-
-```{r}
-weather_df %>% 
-  ggplot(aes(x = tmin, fill = name)) +
-  geom_histogram() + 
-  facet_grid(. ~ name)
-```
-
-Let's try a new geometry!
-
-```{r}
-weather_df %>% 
-  ggplot(aes(x = tmin, fill = name)) + 
-  geom_density(alpha = .3)
-```
-
-What about box plots??
-
-```{r}
-weather_df %>% 
-  ggplot(aes(x = name, y = tmin)) +
-  geom_boxplot()
-```
-
-Trendy plots :-)
-
-```{r}
-weather_df %>% 
-  ggplot(aes(x = name, y = tmin, fill = name)) + 
-  geom_violin(alpha = .5) + 
-  stat_summary()
-```
-
-Ridge plots -- the most popular plot of 2017
-
-```{r}
-weather_df %>% 
-  ggplot(aes(x = tmin, y = name)) + 
-  geom_density_ridges()
-```
-
-
-
-## Save and Embed
-
-Let's save a scatterplot.
-
-```{r}
-weather_plot = 
-  weather_df %>% 
-  ggplot(aes(x = tmin, y = tmax, color = name)) + 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
   geom_point(alpha = .5)
-
-ggsave("weather_plot.pdf", weather_plot, width = 8, height = 5)
 ```
 
-What about embedding...
 
-```{r, fig.width=6, fig.height=3}
-weather_plot
+## Labels
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = .5) + 
+  labs(
+    title = "Temperature plot",
+    x = "Minimum daily temperature (C)",
+    y = "Maximum daily temperature (C)",
+    caption = "Data from the rnoaa package; temperatures in 2017."
+  )
 ```
 
-Embed at different size.
-
-```{r, fig.width=12, fig.height=6}
-weather_plot
-```
