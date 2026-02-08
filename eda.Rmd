@@ -28,19 +28,51 @@ scale_fill_discrete = scale_fill_viridis_d
 ```{r}
 library(p8105.datasets)
 data("weather_df")
-```
 
-```{r}
-weather_df %>% 
- mutate(month = floor_date(date, unit = "month")) %>% 
-select(name, id, everything())
+weather_df <- weather_df %>% 
+  mutate(month = floor_date(date, "month")) %>% 
+  select(name, id, everything())
 ```
 
 ## `group_by`
 
 ```{r}
 weather_df %>% 
-  group_by(name, date) %>% 
-  ungroup(date)
+  group_by(name, month)
+```
+
+## counting things
+
+count month / name observations
+
+```{r}
+weather_df %>% 
+  group_by(name, month) %>% 
+  summarize(n_obs = n())
+```
+
+we can use `count()`
+
+```{r}
+weather_df %>% 
+  count(name, month, name = "n_obs")
+```
+
+**NEVER** use base R's `table`
+
+```{r, eval = FALSE}
+weather_df %>% 
+  pull(month) %>% 
+  table()
+```
+
+other helpful counters 
+
+```{r}
+weather_df %>% 
+  group_by(month) %>% 
+  summarize(
+    n_obs = n(),
+    n_days = n_distinct(date))
 ```
 
